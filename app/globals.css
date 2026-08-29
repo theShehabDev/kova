@@ -1,0 +1,222 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #f6f6f5;
+
+  /* Accent ramp as raw RGB channels so Tailwind's /opacity modifiers work.
+     Charcoal — the token is still named `gold` throughout the codebase. */
+  --gold: 74 79 82; /* #4a4f52 */
+  --gold-soft: 124 130 133; /* #7c8285 */
+  --gold-dark: 51 55 58; /* #33373a */
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg);
+  color: #17191a;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: rgb(var(--gold));
+  color: #f6f6f5;
+}
+
+/* Thin elegant scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #e8e8e7;
+}
+::-webkit-scrollbar-thumb {
+  background: #c2c4c5;
+  border-radius: 999px;
+  border: 2px solid #e8e8e7;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #4a4f52;
+}
+
+@layer components {
+  .label {
+    @apply text-[11px] font-medium uppercase tracking-label text-ink-muted;
+  }
+  .display {
+    @apply font-display font-extrabold uppercase leading-[0.95] tracking-tight text-ink;
+  }
+  .container-x {
+    @apply w-full px-[34px];
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-[linear-gradient(90deg,#484848_0%,#202020_52%,#060606_100%)] px-7 py-3.5 text-[11px] font-semibold uppercase tracking-label text-cream-50 shadow-[inset_0_1px_0_rgba(255,255,255,0.16),inset_0_-1px_1px_rgba(0,0,0,0.6),0_12px_28px_-12px_rgba(0,0,0,0.55)] ring-1 ring-black/40 transition-transform duration-300 hover:scale-[1.03];
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-ink/30 px-7 py-3.5 text-[11px] font-semibold uppercase tracking-label text-ink transition-all duration-300 hover:border-ink hover:bg-ink hover:text-cream-50;
+  }
+  .link-underline {
+    @apply inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-label text-ink transition-colors;
+  }
+
+  /* Grows a control's touch area to the 44x44px minimum without resizing the
+     control itself. The icon buttons in the header are 21px and the social
+     buttons in the footer are 36px — both are deliberate visual sizes, and
+     padding them out to 44px would change the layout and the design. An
+     absolutely positioned ::before centred on the element catches the taps
+     instead, so the hit area grows and nothing moves.
+
+     A mobile QA pass measured Search, Account and Cart at 21x21 and the menu
+     and footer socials at 36x36, all comfortably under the threshold and easy
+     to miss on a phone.
+
+     Requires the element to be a positioned ancestor — `relative` is applied
+     here so call sites don't have to remember it. */
+  .tap-target {
+    @apply relative;
+  }
+  .tap-target::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* hairline rule */
+.hairline {
+  background: linear-gradient(to right, transparent, rgba(23, 25, 26, 0.12), transparent);
+}
+
+/* Visible keyboard focus */
+:focus-visible {
+  outline: 2px solid rgb(var(--gold));
+  outline-offset: 3px;
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Fine film-grain texture (tile-able SVG noise) */
+.grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.42'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+/* Policy pages (/terms, /privacy, /shipping, /research-use-only). Preflight
+   strips heading and list styling, so restore it in the KOVA type scale. */
+.legal-prose > * + * {
+  margin-top: 1.1rem;
+}
+.legal-prose h2 {
+  margin-top: 3rem;
+  font-family: var(--font-archivo), sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgb(var(--gold-dark));
+}
+.legal-prose h2:first-child {
+  margin-top: 0;
+}
+.legal-prose h3 {
+  margin-top: 1.8rem;
+  font-weight: 700;
+  color: #17191a;
+}
+.legal-prose ul {
+  list-style: none;
+  padding-left: 0;
+}
+.legal-prose ul li {
+  position: relative;
+  padding-left: 1.35rem;
+  margin-top: 0.55rem;
+}
+.legal-prose ul li::before {
+  content: "◆";
+  position: absolute;
+  left: 0;
+  top: 0.05em;
+  font-size: 0.6em;
+  color: rgb(var(--gold));
+}
+.legal-prose strong {
+  font-weight: 700;
+  color: #17191a;
+}
+.legal-prose a {
+  color: rgb(var(--gold-dark));
+  text-decoration: underline;
+}
+
+/* Product copy authored in WordPress. Tailwind's preflight strips heading and
+   list styles, so the client's formatting needs re-dressing here to land in the
+   KOVA type scale. */
+.woo-prose > * + * {
+  margin-top: 1rem;
+}
+.woo-prose h3 {
+  margin-top: 2.5rem;
+  font-family: var(--font-archivo), sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgb(var(--gold-dark));
+}
+.woo-prose h3:first-child {
+  margin-top: 0;
+}
+.woo-prose ul {
+  list-style: none;
+  padding-left: 0;
+}
+.woo-prose ul li {
+  position: relative;
+  padding-left: 1.35rem;
+  margin-top: 0.6rem;
+}
+.woo-prose ul li::before {
+  content: "◆";
+  position: absolute;
+  left: 0;
+  top: 0.05em;
+  font-size: 0.6em;
+  color: rgb(var(--gold));
+}
+.woo-prose strong {
+  font-weight: 700;
+  color: #17191a;
+}
+.woo-prose em {
+  font-style: normal;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #4a4f52;
+}
+.woo-prose a {
+  color: rgb(var(--gold-dark));
+  text-decoration: underline;
+}

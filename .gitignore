@@ -1,0 +1,31 @@
+node_modules
+.next
+.vercel
+.DS_Store
+
+# Secrets. Never commit these.
+.env
+.env.local
+.env*.local
+
+# Tooling and notes that don't belong in the app repo.
+.claude/
+claude.md
+CLAUDE.md
+*.md
+
+# WordPress plugins are committed. Membership is not: it is not active on the
+# site. Exports, archives and the client docs alongside them stay out too.
+woocommerce/kova-membership/
+woocommerce/*.csv
+woocommerce/*.css
+woocommerce/*.html
+*.zip
+*.log
+basaltsurge*.txt
+
+# Membership. Kept locally, not shipped: the WordPress side is not active.
+components/MembershipTiers.js
+components/AccountPortal.js
+components/AccountPortal.js.disabled
+public/images/membership-cards.png

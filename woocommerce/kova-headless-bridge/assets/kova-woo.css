@@ -1,0 +1,1033 @@
+/* ==========================================================================
+   KOVA — WooCommerce checkout skin
+   --------------------------------------------------------------------------
+   Makes the WordPress checkout look like the Next.js storefront, so the
+   handoff at payment doesn't feel like landing on a different company's site.
+
+   INSTALL: WordPress admin -> Appearance -> Customize -> Additional CSS.
+   Paste the whole file, hit Publish. No theme files touched, so a theme
+   update can never wipe it.
+
+   Tokens mirror tailwind.config.js / globals.css:
+     cream-50  #f6f6f5    ink         #17191a
+     cream-100 #f1f1f0    ink-soft    #23262a
+     cream-200 #e8e8e7    ink-muted   #2f3336
+     accent    #4a4f52    ink-faint   #4a4f52
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800;900&family=Open+Sans:wght@400;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+:root {
+  --kova-cream-50: #f6f6f5;
+  --kova-cream-100: #f1f1f0;
+  --kova-cream-200: #e8e8e7;
+  --kova-ink: #17191a;
+  --kova-ink-soft: #23262a;
+  --kova-ink-muted: #2f3336;
+  --kova-accent: #4a4f52;
+  --kova-line: rgba(23, 25, 26, 0.1);
+}
+
+/* --- page shell ---------------------------------------------------------- */
+
+body,
+body.woocommerce-checkout,
+body.woocommerce-cart,
+body.woocommerce-account {
+  background-color: var(--kova-cream-50) !important;
+  color: var(--kova-ink) !important;
+  font-family: 'Open Sans', system-ui, sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Storefront's sidebar and breadcrumb are noise on a checkout. */
+.woocommerce-checkout .widget-area,
+.woocommerce-checkout #secondary,
+.woocommerce-breadcrumb,
+.storefront-breadcrumb {
+  display: none !important;
+}
+
+.woocommerce-checkout #primary,
+.woocommerce-checkout .content-area {
+  width: 100% !important;
+  max-width: 1100px;
+  margin: 0 auto;
+  float: none !important;
+}
+
+/* --- typography ---------------------------------------------------------- */
+
+h1, h2, h3,
+.woocommerce-checkout h3,
+#order_review_heading {
+  font-family: 'Playfair Display', Georgia, serif !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.01em;
+  color: var(--kova-ink) !important;
+}
+
+/* Section labels get the storefront's condensed uppercase treatment. */
+.woocommerce-billing-fields > h3,
+.woocommerce-shipping-fields > h3,
+#order_review_heading {
+  font-family: 'Archivo', system-ui, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.22em !important;
+  text-transform: uppercase !important;
+  color: var(--kova-accent) !important;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--kova-line);
+  margin-bottom: 24px !important;
+}
+
+/* --- form fields --------------------------------------------------------- */
+
+.woocommerce form .form-row label {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--kova-ink-muted) !important;
+  margin-bottom: 6px;
+}
+
+.woocommerce form .form-row input.input-text,
+.woocommerce form .form-row textarea,
+.woocommerce form .form-row .select2-container .select2-selection,
+.woocommerce form .form-row select {
+  background: #fff !important;
+  border: 1px solid var(--kova-line) !important;
+  border-radius: 2px !important;
+  padding: 13px 15px !important;
+  font-size: 14px !important;
+  font-family: 'Open Sans', system-ui, sans-serif !important;
+  color: var(--kova-ink) !important;
+  box-shadow: none !important;
+  transition: border-color 0.2s ease;
+}
+
+.woocommerce form .form-row input.input-text:focus,
+.woocommerce form .form-row textarea:focus,
+.woocommerce form .form-row select:focus {
+  border-color: var(--kova-accent) !important;
+  outline: 2px solid rgba(74, 79, 82, 0.15);
+  outline-offset: 1px;
+}
+
+/* Keep the required-field marker visible — accessibility, not decoration. */
+.woocommerce form .form-row .required {
+  color: #b3261e !important;
+  text-decoration: none;
+}
+
+/* --- order review panel -------------------------------------------------- */
+
+.woocommerce-checkout-review-order,
+#order_review {
+  background: var(--kova-cream-100) !important;
+  border: 1px solid var(--kova-line);
+  border-radius: 4px;
+  padding: 28px !important;
+}
+
+.woocommerce-checkout-review-order-table {
+  border: none !important;
+}
+
+.woocommerce-checkout-review-order-table th,
+.woocommerce-checkout-review-order-table td {
+  border-color: var(--kova-line) !important;
+  font-size: 13px !important;
+  padding: 14px 0 !important;
+}
+
+.woocommerce-checkout-review-order-table thead th {
+  font-family: 'Archivo', system-ui, sans-serif !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--kova-ink-muted) !important;
+}
+
+.woocommerce-checkout-review-order-table .order-total th,
+.woocommerce-checkout-review-order-table .order-total td {
+  font-family: 'Archivo', system-ui, sans-serif !important;
+  font-size: 17px !important;
+  font-weight: 800 !important;
+  color: var(--kova-ink) !important;
+  border-top: 1px solid var(--kova-line) !important;
+}
+
+/* --- buttons ------------------------------------------------------------- */
+
+/* Matches .btn-primary on the storefront. */
+.woocommerce #payment #place_order,
+.woocommerce a.button,
+.woocommerce button.button,
+.woocommerce input.button,
+.woocommerce button.button.alt {
+  background: linear-gradient(90deg, #484848 0%, #202020 52%, #060606 100%) !important;
+  color: var(--kova-cream-50) !important;
+  font-family: 'Archivo', system-ui, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+  border: none !important;
+  border-radius: 999px !important;
+  /* 13/26 rather than 17/34. The original was sized for the single Place Order
+     button at the end of checkout, where a large target is right. Applied to
+     every button in the account area it made "Save address" and "Log out" look
+     like primary calls to action. Matches the affiliate portal's button. */
+  padding: 13px 26px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16),
+              inset 0 -1px 1px rgba(0, 0, 0, 0.6),
+              0 12px 28px -12px rgba(0, 0, 0, 0.55) !important;
+  transition: transform 0.3s ease !important;
+}
+
+.woocommerce #payment #place_order:hover,
+.woocommerce a.button:hover,
+.woocommerce button.button:hover,
+.woocommerce input.button:hover {
+  transform: scale(1.02);
+  opacity: 1 !important;
+}
+
+.woocommerce #payment #place_order {
+  width: 100%;
+  margin-top: 8px;
+}
+
+/* Respect reduced-motion, same as the storefront does. */
+@media (prefers-reduced-motion: reduce) {
+  .woocommerce #payment #place_order,
+  .woocommerce a.button,
+  .woocommerce button.button,
+  .woocommerce input.button {
+    transition: none !important;
+  }
+  .woocommerce #payment #place_order:hover,
+  .woocommerce a.button:hover,
+  .woocommerce button.button:hover,
+  .woocommerce input.button:hover {
+    transform: none;
+  }
+}
+
+/* --- payment box --------------------------------------------------------- */
+
+.woocommerce-checkout #payment {
+  background: transparent !important;
+  border-radius: 0;
+}
+
+.woocommerce-checkout #payment ul.payment_methods {
+  border-bottom: 1px solid var(--kova-line) !important;
+  padding: 0 0 18px !important;
+}
+
+.woocommerce-checkout #payment div.payment_box {
+  background: var(--kova-cream-200) !important;
+  font-size: 13px;
+  color: var(--kova-ink-soft) !important;
+}
+
+.woocommerce-checkout #payment div.payment_box::before {
+  border-bottom-color: var(--kova-cream-200) !important;
+}
+
+/* --- notices ------------------------------------------------------------- */
+
+.woocommerce-message,
+.woocommerce-info {
+  border-top-color: var(--kova-accent) !important;
+  background: var(--kova-cream-100) !important;
+  font-size: 13px;
+}
+
+.woocommerce-message::before,
+.woocommerce-info::before {
+  color: var(--kova-accent) !important;
+}
+
+.woocommerce-error {
+  border-top-color: #b3261e !important;
+  background: #fdf3f2 !important;
+  font-size: 13px;
+}
+
+/* --- research-use-only reminder at the point of purchase ----------------- */
+
+.woocommerce-checkout .woocommerce-terms-and-conditions-wrapper::before {
+  content: 'For laboratory research use only. Not for human or veterinary use.';
+  display: block;
+  margin-bottom: 14px;
+  font-family: 'Archivo', system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--kova-ink-muted);
+}
+
+/* --- focused checkout header --------------------------------------------- */
+/* Strip the shop nav down to just the logo during checkout. Standard practice:
+   fewer exits from the payment page. The logo still links home, and the bridge
+   plugin bounces that back to the Next.js storefront, so it stays an escape
+   hatch rather than a dead end. */
+
+.woocommerce-checkout .main-navigation,
+.woocommerce-checkout .storefront-primary-navigation,
+.woocommerce-checkout .site-search,
+.woocommerce-checkout .site-header-cart,
+.woocommerce-checkout .menu-toggle,
+.woocommerce-checkout .site-footer .widget-area,
+.woocommerce-checkout .storefront-handheld-footer-bar {
+  display: none !important;
+}
+
+.woocommerce-checkout .site-header {
+  background: var(--kova-cream-50) !important;
+  border-bottom: 1px solid var(--kova-line);
+  padding: 22px 0 !important;
+  text-align: center;
+}
+
+.woocommerce-checkout .site-branding,
+.woocommerce-checkout .custom-logo-link {
+  float: none !important;
+  margin: 0 auto !important;
+  display: inline-block !important;
+  width: auto !important;
+}
+
+.woocommerce-checkout .custom-logo {
+  max-height: 46px;
+  width: auto;
+}
+
+/* If no logo image is set, fall back to the wordmark rather than nothing. */
+.woocommerce-checkout .site-title a {
+  font-family: 'Archivo', system-ui, sans-serif !important;
+  font-size: 20px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--kova-ink) !important;
+  text-decoration: none;
+}
+
+.woocommerce-checkout .site-description {
+  display: none !important;
+}
+
+/* --- account content, matched to the affiliate portal ---------------------
+   The affiliate screen is drawn by the KOVA Affiliates plugin with its own
+   scoped styles: hairline panels on cream, small uppercase eyebrow labels,
+   ruled tables, restrained type. The rest of the account area was still mostly
+   Storefront defaults sitting next to it, so moving between tabs looked like
+   moving between two different products.
+
+   These bring the shared furniture into line. Deliberately generic selectors
+   (tables, forms, headings) rather than per-page ones, so a page nobody has
+   looked at yet inherits the same treatment instead of reverting to defaults.
+   -------------------------------------------------------------------------- */
+
+.woocommerce-account .woocommerce-MyAccount-content h2,
+.woocommerce-account .woocommerce-MyAccount-content h3 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--kova-ink);
+  margin: 0 0 14px;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content p {
+  line-height: 1.7;
+  color: var(--kova-ink-muted);
+}
+
+/* Tables: orders, downloads, address book. Ruled rows, quiet uppercase
+   headers, no zebra fill — the same treatment as the affiliate history table. */
+.woocommerce-account .woocommerce-MyAccount-content table.shop_table {
+  border: 0;
+  border-collapse: collapse;
+  border-radius: 0;
+  width: 100%;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content table.shop_table th {
+  padding: 0 14px 10px 0;
+  border: 0;
+  border-bottom: 1px solid var(--kova-line);
+  background: transparent;
+  font-family: 'Archivo', system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--kova-ink-muted);
+  text-align: left;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content table.shop_table td {
+  padding: 14px 14px 14px 0;
+  border: 0;
+  border-bottom: 1px solid var(--kova-line);
+  background: transparent;
+  font-size: 13.5px;
+  color: var(--kova-ink-soft);
+  vertical-align: middle;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content table.shop_table tbody tr:hover td {
+  background: var(--kova-cream-100);
+}
+
+/* Form fields, matched to the affiliate application form. */
+.woocommerce-account .woocommerce-MyAccount-content input[type=text],
+.woocommerce-account .woocommerce-MyAccount-content input[type=email],
+.woocommerce-account .woocommerce-MyAccount-content input[type=tel],
+.woocommerce-account .woocommerce-MyAccount-content input[type=password],
+.woocommerce-account .woocommerce-MyAccount-content textarea,
+.woocommerce-account .woocommerce-MyAccount-content select {
+  padding: 13px 15px;
+  border: 1px solid rgba(23, 25, 26, 0.2);
+  border-radius: 8px;
+  background: #fff;
+  /* 16px, not smaller. iOS Safari zooms the viewport on focus for anything
+     under 16px, which throws the whole page sideways mid-form. */
+  font-size: 16px;
+  color: var(--kova-ink);
+}
+
+.woocommerce-account .woocommerce-MyAccount-content input:focus,
+.woocommerce-account .woocommerce-MyAccount-content textarea:focus,
+.woocommerce-account .woocommerce-MyAccount-content select:focus {
+  outline: none;
+  border-color: var(--kova-accent);
+  box-shadow: 0 0 0 3px rgba(74, 79, 82, 0.12);
+}
+
+.woocommerce-account .woocommerce-MyAccount-content label {
+  font-family: 'Archivo', system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--kova-ink-faint, var(--kova-accent));
+}
+
+/* Storefront's fieldset borders read as boxes inside boxes next to the
+   affiliate panels. */
+.woocommerce-account .woocommerce-MyAccount-content fieldset {
+  border: 0;
+  border-top: 1px solid var(--kova-line);
+  margin: 26px 0 0;
+  padding: 22px 0 0;
+}
+
+/* --- mobile -------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  .woocommerce-checkout-review-order,
+  #order_review {
+    padding: 20px !important;
+  }
+  .woocommerce #payment #place_order {
+    padding: 16px 24px !important;
+    font-size: 10px !important;
+  }
+  .woocommerce-checkout .custom-logo {
+    max-height: 36px;
+  }
+}
+
+/* ==========================================================================
+   ACCOUNT PAGES
+   --------------------------------------------------------------------------
+   Everything above was written for the checkout only. The My Account area
+   uses a different set of class names, so none of it applied there — which is
+   why those pages still looked like stock Storefront.
+
+   Covers: login/register, dashboard, orders, order-received, addresses,
+   account details, and the Membership tab added by kova-membership.
+   ========================================================================== */
+
+/* --- strip the theme chrome ---------------------------------------------
+   The storefront's own header and footer wrap these pages in the browser, so
+   Storefront's versions are duplicate furniture. Removing them is what makes
+   the handoff stop feeling like a different website. */
+
+.woocommerce-account .site-header,
+.woocommerce-account .site-footer,
+.woocommerce-account .storefront-breadcrumb,
+.woocommerce-account .widget-area,
+.woocommerce-account #secondary,
+.woocommerce-checkout .site-footer,
+.woocommerce-cart .site-footer,
+.woocommerce-cart .widget-area,
+.woocommerce-cart #secondary {
+  display: none !important;
+}
+
+.woocommerce-account #primary,
+.woocommerce-account .content-area,
+.woocommerce-cart #primary,
+.woocommerce-cart .content-area {
+  width: 100% !important;
+  max-width: 1100px;
+  margin: 0 auto;
+  float: none !important;
+  padding-top: 48px;
+}
+
+.woocommerce-account .site-content,
+.woocommerce-cart .site-content {
+  background-color: var(--kova-cream-50) !important;
+}
+
+/* --- account navigation --------------------------------------------------
+   Storefront renders this as a bulleted list. Rebuilt as a quiet sidebar that
+   matches the storefront's uppercase label treatment. */
+
+/* Selectors are deliberately long. Storefront styles this menu with
+   `.hentry .entry-content .woocommerce-MyAccount-navigation ul li`, which is
+   three classes and two elements. Anything shorter loses no matter what order
+   the files load in, which is why an earlier attempt at this had no effect at
+   all. Matching its chain and adding one more class wins cleanly, without
+   scattering !important through the block.
+
+   The `:is()` wrapper keeps the rules working on a theme with no .hentry
+   wrapper: the second branch is the plain selector, the first outranks
+   Storefront. */
+
+.woocommerce-account .woocommerce-MyAccount-navigation {
+  width: 24% !important;
+  margin-right: 4%;
+}
+
+.woocommerce-account :is(.hentry .entry-content, body) .woocommerce-MyAccount-navigation ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--kova-line);
+}
+
+.woocommerce-account :is(.hentry .entry-content, body) .woocommerce-MyAccount-navigation ul li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid var(--kova-line);
+  border-left: 0;
+  background: transparent;
+  position: relative;
+}
+
+.woocommerce-account :is(.hentry .entry-content, body) .woocommerce-MyAccount-navigation ul li::before,
+.woocommerce-account :is(.hentry .entry-content, body) .woocommerce-MyAccount-navigation ul li::after {
+  content: none;
+}
+
+.woocommerce-account :is(.hentry .entry-content, body) .woocommerce-MyAccount-navigation ul li a {
+  display: block;
+  position: relative;
+  padding: 15px 16px;
+  border: 0;
+  font-family: 'Archivo', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--kova-ink-muted);
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.woocommerce-account :is(.hentry .entry-content, body) .woocommerce-MyAccount-navigation ul li a:hover {
+  background: var(--kova-cream-100);
+  color: var(--kova-ink);
+}
+
+.woocommerce-account :is(.hentry .entry-content, body) .woocommerce-MyAccount-navigation ul li.is-active a {
+  background: var(--kova-cream-100);
+  color: var(--kova-ink);
+}
+
+/* The accent, drawn on the link and pinned to its box with top/bottom 0 so it
+   is exactly the height of the row. Previous versions sized it against the
+   text, which left a short bar floating beside the label that read as a stray
+   text cursor. */
+.woocommerce-account :is(.hentry .entry-content, body) .woocommerce-MyAccount-navigation ul li.is-active a::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background: var(--kova-ink);
+}
+
+.woocommerce-account .woocommerce-MyAccount-content {
+  width: 72% !important;
+}
+
+/* --- tables (orders, downloads, credit history) -------------------------- */
+
+.woocommerce-account table.shop_table,
+.woocommerce-account table.woocommerce-table {
+  border: 1px solid var(--kova-line) !important;
+  border-radius: 10px !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  background: var(--kova-cream-50);
+  overflow: hidden;
+}
+
+.woocommerce-account table.shop_table th,
+.woocommerce-account table.woocommerce-table th {
+  font-family: 'Archivo', system-ui, sans-serif !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+  color: var(--kova-ink-muted) !important;
+  border-bottom: 1px solid var(--kova-line) !important;
+  padding: 16px 18px !important;
+}
+
+.woocommerce-account table.shop_table td,
+.woocommerce-account table.woocommerce-table td {
+  border-top: 1px solid var(--kova-line) !important;
+  padding: 16px 18px !important;
+  font-size: 14px;
+}
+
+/* --- the referral link field on the Membership tab ----------------------- */
+
+.woocommerce-account .woocommerce-MyAccount-content input[readonly] {
+  border: 1px solid var(--kova-line);
+  border-radius: 999px;
+  background: var(--kova-cream-200);
+  padding: 12px 18px;
+  font-size: 13px;
+  color: var(--kova-ink);
+}
+
+/* --- order received / thank-you ------------------------------------------ */
+
+.woocommerce-order .woocommerce-thankyou-order-received {
+  font-family: 'Playfair Display', Georgia, serif !important;
+  font-size: 28px !important;
+  font-weight: 500 !important;
+  color: var(--kova-ink) !important;
+}
+
+.woocommerce-order ul.woocommerce-order-overview {
+  list-style: none !important;
+  margin: 28px 0 !important;
+  padding: 22px !important;
+  border: 1px solid var(--kova-line);
+  border-radius: 10px;
+  background: var(--kova-cream-50);
+}
+
+.woocommerce-order ul.woocommerce-order-overview li {
+  border-right: 1px solid var(--kova-line) !important;
+  font-size: 11px !important;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--kova-ink-muted) !important;
+}
+
+.woocommerce-order ul.woocommerce-order-overview li strong {
+  display: block;
+  margin-top: 8px;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 17px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--kova-ink);
+}
+
+/* --- login / register ---------------------------------------------------- */
+
+.woocommerce-account:not(.logged-in) .woocommerce-MyAccount-navigation {
+  display: none !important;
+}
+
+.woocommerce-account .u-columns.col2-set {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.woocommerce-account .u-columns.col2-set > .col-1,
+.woocommerce-account .u-columns.col2-set > .col-2 {
+  flex: 1 1 320px;
+  width: auto !important;
+  float: none !important;
+  padding: 30px !important;
+  border: 1px solid var(--kova-line);
+  border-radius: 12px;
+  background: var(--kova-cream-50);
+}
+
+/* --- mobile --------------------------------------------------------------
+   The logo was being squashed by Storefront's mobile header rules. Reset the
+   height cap and let it size from its own aspect ratio. */
+
+@media (max-width: 768px) {
+  .woocommerce-account .custom-logo,
+  .woocommerce-checkout .custom-logo,
+  .woocommerce-cart .custom-logo {
+    max-height: none !important;
+    width: auto !important;
+    height: 40px !important;
+    max-width: 190px !important;
+    object-fit: contain !important;
+  }
+
+  .woocommerce-account .woocommerce-MyAccount-navigation,
+  .woocommerce-account .woocommerce-MyAccount-content {
+    width: 100% !important;
+    margin-right: 0 !important;
+  }
+
+  .woocommerce-account .woocommerce-MyAccount-navigation {
+    margin-bottom: 28px;
+  }
+
+  .woocommerce-account #primary,
+  .woocommerce-cart #primary {
+    padding-top: 24px;
+  }
+
+  /* Order tables overflow a phone otherwise. */
+  .woocommerce-account table.shop_table,
+  .woocommerce-account table.woocommerce-table {
+    display: block;
+    overflow-x: auto;
+  }
+}
+
+/* --- notices -------------------------------------------------------------
+   WooCommerce's info/message/error boxes inherit Storefront's palette, which
+   on this cream background rendered as near-white text on near-white — the
+   "You are currently logged in as…" bar on the account page was effectively
+   invisible. Repainted with real contrast. */
+
+.woocommerce-info,
+.woocommerce-message,
+.woocommerce-error,
+.woocommerce-notice,
+.woocommerce-noreviews,
+.wc-block-components-notice-banner {
+  background-color: var(--kova-cream-200) !important;
+  color: var(--kova-ink) !important;
+  border: 1px solid var(--kova-line) !important;
+  border-top: 2px solid var(--kova-ink) !important;
+  border-radius: 8px !important;
+  padding: 16px 20px !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+  list-style: none !important;
+}
+
+.woocommerce-info *,
+.woocommerce-message *,
+.woocommerce-notice *,
+.wc-block-components-notice-banner * {
+  color: var(--kova-ink) !important;
+}
+
+.woocommerce-error {
+  border-top-color: #8a2b2b !important;
+}
+
+.woocommerce-error,
+.woocommerce-error * {
+  color: #6b2020 !important;
+}
+
+/* Storefront hangs a ::before glyph on these; it lands on top of the text at
+   this padding. */
+.woocommerce-info::before,
+.woocommerce-message::before,
+.woocommerce-error::before {
+  display: none !important;
+}
+
+/* The inline "Log out" / "Change address" links inside a notice were the same
+   colour as the notice text, so they read as plain words. */
+.woocommerce-info a,
+.woocommerce-message a,
+.woocommerce-notice a {
+  color: var(--kova-ink) !important;
+  font-weight: 700 !important;
+  text-decoration: underline !important;
+  text-underline-offset: 3px;
+}
+
+.woocommerce-info a:hover,
+.woocommerce-message a:hover {
+  color: var(--kova-accent) !important;
+}
+
+/* The account page's notice sits flush against the heading otherwise. */
+.woocommerce-account .woocommerce-MyAccount-content > .woocommerce-info:first-child {
+  margin-bottom: 28px !important;
+}
+
+/* --- links inside account/checkout content -------------------------------
+   "Lost your password?" and "privacy policy" were rendering in the browser's
+   default link purple against a cream card — the one obviously un-designed
+   thing on the page. */
+
+/* Scoped to the CONTENT column only. The first draft targeted every link
+   under .woocommerce, which outranked the nav's own styling — on mobile the
+   active chip painted ink-on-ink and its label vanished. The nav styles
+   itself; this rule must never reach it. */
+.woocommerce-account .woocommerce-MyAccount-content a:not(.button):not(.wp-block-button__link),
+.woocommerce-checkout .woocommerce a:not(.button):not(.wp-block-button__link),
+.woocommerce-account .woocommerce-privacy-policy-text a,
+.woocommerce-checkout .woocommerce-privacy-policy-text a,
+.woocommerce-account .woocommerce-form-login a,
+.woocommerce-account .woocommerce-form-register a,
+.woocommerce-LostPassword a {
+  color: var(--kova-ink) !important;
+  text-decoration: none !important;
+  border-bottom: 1px solid rgba(23, 25, 26, 0.28);
+  padding-bottom: 1px;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content a:not(.button):hover,
+.woocommerce-checkout .woocommerce a:not(.button):hover,
+.woocommerce-LostPassword a:hover {
+  color: var(--kova-accent) !important;
+  border-bottom-color: var(--kova-accent);
+}
+
+.woocommerce-LostPassword {
+  margin-top: 18px !important;
+  font-size: 13px;
+}
+
+/* --- password show/hide toggle -------------------------------------------
+   WooCommerce renders this as a font glyph. The icon font isn't loading here,
+   so it painted a tofu box (□) hanging off the field. Replaced with a text
+   label, which also reads better than an eye nobody recognises. */
+
+.woocommerce form .password-input,
+.woocommerce-page form .password-input {
+  display: block !important;
+  position: relative;
+}
+
+.woocommerce form .show-password-input,
+.woocommerce-page form .show-password-input {
+  position: absolute !important;
+  top: 50% !important;
+  right: 0 !important;
+  transform: translateY(-50%);
+  width: auto !important;
+  height: auto !important;
+  padding: 0 14px !important;
+  background: none !important;
+  border: 0 !important;
+  font-size: 0 !important;          /* kills the missing glyph */
+  cursor: pointer;
+  z-index: 2;
+}
+
+.woocommerce form .show-password-input::before,
+.woocommerce form .show-password-input::after,
+.woocommerce-page form .show-password-input::before {
+  content: none !important;
+}
+
+.woocommerce form .show-password-input::after,
+.woocommerce-page form .show-password-input::after {
+  content: "SHOW" !important;
+  font-family: 'Archivo', system-ui, sans-serif !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.14em !important;
+  color: var(--kova-ink-muted) !important;
+}
+
+.woocommerce form .show-password-input.display-password::after,
+.woocommerce-page form .show-password-input.display-password::after {
+  content: "HIDE" !important;
+  color: var(--kova-ink) !important;
+}
+
+/* Stop the toggle sitting on top of typed characters. */
+.woocommerce form .password-input input[type="password"],
+.woocommerce form .password-input input[type="text"] {
+  padding-right: 74px !important;
+}
+
+/* --- kill the missing icon glyphs ----------------------------------------
+   Storefront hangs a font icon off every account nav item, checkout section
+   and button. That icon font isn't loading on this install, so each one
+   painted a tofu box (□). They carry no meaning — the labels already say what
+   the links do — so they go rather than get replaced. */
+
+.woocommerce-account .woocommerce-MyAccount-navigation li a::before,
+.woocommerce-account .woocommerce-MyAccount-navigation li a::after,
+.woocommerce-MyAccount-navigation-link a::before,
+.woocommerce-MyAccount-navigation-link a::after,
+.woocommerce-account .woocommerce-Button::after,
+.woocommerce .button::after,
+.woocommerce a.button::after,
+.storefront-primary-navigation a::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* --- mobile --------------------------------------------------------------
+   The account nav was rendering as a narrow fixed column with the content
+   squeezed beside it, leaving most of the screen empty. Stacked instead, with
+   the nav as a horizontal row of chips above the content. */
+
+@media (max-width: 900px) {
+  .woocommerce-account #primary,
+  .woocommerce-account .content-area,
+  .woocommerce-cart #primary,
+  .woocommerce-checkout #primary {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+
+  .woocommerce-account .woocommerce-MyAccount-navigation {
+    width: 100% !important;
+    float: none !important;
+    margin: 0 0 26px 0 !important;
+  }
+
+  /* These repeat the desktop block's :is() prefix on purpose. A media query
+     adds no specificity, so a shorter selector here loses to the desktop rules
+     above and the chips inherit a light background while keeping white text —
+     which is exactly how the active item became invisible on phones. */
+  .woocommerce-account :is(.hentry .entry-content, body) .woocommerce-MyAccount-navigation ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    border-top: 0;
+  }
+
+  .woocommerce-account :is(.hentry .entry-content, body) .woocommerce-MyAccount-navigation ul li {
+    border-bottom: 0;
+    margin: 0;
+  }
+
+  .woocommerce-account :is(.hentry .entry-content, body) .woocommerce-MyAccount-navigation ul li a {
+    padding: 10px 16px;
+    border: 1px solid var(--kova-line);
+    border-radius: 999px;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    white-space: nowrap;
+    background: transparent;
+    color: var(--kova-ink-muted);
+  }
+
+  /* The desktop active accent is a bar pinned to the left of the link. On a
+     pill that reads as a broken edge, so it is removed rather than restyled. */
+  .woocommerce-account :is(.hentry .entry-content, body) .woocommerce-MyAccount-navigation ul li.is-active a::before {
+    content: none;
+  }
+
+  .woocommerce-account :is(.hentry .entry-content, body) .woocommerce-MyAccount-navigation ul li.is-active a {
+    background: var(--kova-ink);
+    border-color: var(--kova-ink);
+    color: var(--kova-cream-50);
+    box-shadow: none;
+  }
+
+  .woocommerce-account .woocommerce-MyAccount-content {
+    width: 100% !important;
+    float: none !important;
+  }
+
+  /* Login/Register stack rather than sitting in two unusable columns. */
+  .woocommerce-account .u-columns.col2-set {
+    gap: 16px;
+  }
+
+  .woocommerce-account .u-columns.col2-set > .col-1,
+  .woocommerce-account .u-columns.col2-set > .col-2 {
+    flex: 1 1 100%;
+    padding: 22px !important;
+  }
+
+  .woocommerce-account h1,
+  .woocommerce-account .entry-title {
+    font-size: 34px !important;
+    text-align: left;
+  }
+}
+
+/* Headings inside the account content at phone widths — "Your membership"
+   was breaking mid-word at Storefront's default sizes. */
+@media (max-width: 480px) {
+  .woocommerce-account .woocommerce-MyAccount-content h3 {
+    font-size: 21px !important;
+    overflow-wrap: normal;
+    word-break: keep-all;
+  }
+}
+
+/* --- KOVA top bar ---------------------------------------------------------
+   Injected by the bridge plugin on every shopper-reachable page. Replaces the
+   theme header outright, so the theme's version is hidden below — including
+   on checkout, which previously restyled it instead. One bar, one look. */
+
+.woocommerce-checkout .site-header,
+.woocommerce-cart .site-header,
+.woocommerce-account .site-header {
+  display: none !important;
+}
+
+.kova-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px clamp(18px, 4vw, 48px);
+  background: var(--kova-cream-50);
+  border-bottom: 1px solid var(--kova-line);
+}
+
+.kova-topbar-brand {
+  font-family: 'Playfair Display', Georgia, serif !important;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  color: var(--kova-ink) !important;
+  text-decoration: none !important;
+  border: 0 !important;
+}
+
+.kova-topbar-back {
+  font-family: 'Archivo', system-ui, sans-serif !important;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--kova-ink-muted) !important;
+  text-decoration: none !important;
+  border: 0 !important;
+  transition: color 0.2s ease;
+}
+
+.kova-topbar-back:hover {
+  color: var(--kova-ink) !important;
+}
